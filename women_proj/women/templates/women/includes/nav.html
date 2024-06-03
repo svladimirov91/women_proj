@@ -1,0 +1,17 @@
+{% load women_tags %}
+
+<style>
+  .menu {
+  font-size:17px;
+  margin: 3px
+  }
+</style>
+
+<nav>
+  {% get_categories as categories %}
+  <a class="menu" href="#">Все категории</a> |
+  {% for categ in categories %}
+  <a class="menu" href="#">{{ categ.title }}</a>
+  {% if not forloop.last %}|{% else %}{% endif %}
+  {% endfor %}
+</nav>

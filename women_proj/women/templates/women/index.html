@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'women/includes/nav.html' %}
+
+    <h1 style="font-size: 50px">{{title}}</h1>
+    <ul>
+    {% for post in posts %}
+    <li>
+        <h2>{{post.title}}</h2>
+        <p>{{post.content|linebreaks|truncatewords:55}}</p>
+        <a href="{{post.get_absolute_url}}">Читать статью</a>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+    </li>
+    {% endfor %}
+    </ul>
+<br>
+{% include 'women/includes/nav.html' %}
+<br>
+{% endblock %}
+
