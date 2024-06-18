@@ -1,9 +1,10 @@
 from django import template
-import women.views as views
+from women.models import Category
 
 register = template.Library()
+categories = Category.objects.all()
 
 
 @register.simple_tag()
 def get_categories():
-    return views.categ_db
+    return categories

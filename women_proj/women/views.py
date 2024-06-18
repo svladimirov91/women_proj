@@ -1,19 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound
 
-from .models import Woman
+from .models import Woman, Category, Tag
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
     {'title': 'Добавить статью', 'url_name': 'add'},
     {'title': 'Обратная связь', 'url_name': 'contacts'},
     {'title': 'Войти', 'url_name': 'login'}
-]
-
-categ_db = [
-    {'id': 1, 'title': 'Актрисы'},
-    {'id': 2, 'title': 'Певицы'},
-    {'id': 3, 'title': 'Спортсменки'},
 ]
 
 women_db = Woman.published.all()
@@ -50,9 +44,34 @@ def show_post(request, post_slug):
         'title': post.title,
         'menu': menu,
         'post': post,
-        'categ_selected': 1
+        'categ_selected': None
     }
     return render(request, 'women/post.html', context=data)
+
+
+def show_by_category(request, categ_slug):
+    category = get_object_or_404(Category, slug=categ_slug)
+    posts = Woman.objects.filter(categ_id=category.pk)
+    data = {
+        'title': f'Рубрика: {category.name}',
+        'menu': menu,
+        'posts': posts,
+        'categ_selected': category.pk
+    }
+    return render(request, 'women/index.html', context=data)
+
+
+def show_tag_postlist(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = tag.tags.filter(ispublished=Woman.Status.PUBLISHED)
+    data = {
+        'title': f'Тег: {tag.tag}',
+        'menu': menu,
+        'posts': posts,
+        'categ_selected': None
+    }
+
+    return render(request, 'women/index.html', context=data)
 
 
 def page_not_found(request, exception):

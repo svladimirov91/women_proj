@@ -9,9 +9,9 @@
 
 <nav>
   {% get_categories as categories %}
-  <a class="menu" href="#">Все категории</a> |
+  <a class="menu" href="{% url 'home' %}">Все категории</a> |
   {% for categ in categories %}
-  <a class="menu" href="#">{{ categ.title }}</a>
+  <a class="menu" href="{{ categ.get_absolute_url }}">{{ categ.name }}</a>
   {% if not forloop.last %}|{% else %}{% endif %}
   {% endfor %}
 </nav>
