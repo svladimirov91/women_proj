@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
+{% load women_tags %}
 
 {% block content %}
 {% include 'women/includes/nav.html' %}
 
     <h1 style="font-size: 50px">{{title}}</h1>
     <ul>
-    {% for post in posts %}
-    <li>
-        <h2>{{post.title}}</h2>
-        <p>{{post.content|linebreaks|truncatewords:55}}</p><br>
-        <div>
-            <p>Категория: <i>{{post.categ.name}}</i></p>
-            <p>Последнее обновление: <i>{{post.time_update}}</i></p>
-        </div>
-        <a href="{{post.get_absolute_url}}"><button style="cursor:pointer">Читать статью</button></a>
-        {% if not forloop.last %}
-        <hr>
+        {% for post in posts %}
+        {% if post.ispublished %}
+        <li>
+            <h2>{{post.title}}</h2>
+            <p>{{post.content|linebreaks|truncatewords:55}}</p><br>
+            <div>
+                <p>Категория: <i>{{post.categ.name}}</i></p>
+                <p>Последнее обновление: <i>{{post.time_update}}</i></p>
+            </div>
+            <a href="{{post.get_absolute_url}}"><button style="cursor:pointer">Читать статью</button></a>
+            {% if not forloop.last %}
+            <hr>
+            {% endif %}
+        </li>
         {% endif %}
-    </li>
-    {% endfor %}
+        {% endfor %}
     </ul>
 <br>
-{% include 'women/includes/nav.html' %}
+{% show_all_tags %}
 <br>
 {% endblock %}
 
