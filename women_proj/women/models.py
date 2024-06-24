@@ -12,25 +12,36 @@ class Woman(models.Model):
         DRAFT = 0, 'Черновик'
         PUBLISHED = 1, 'Опубликовано'
 
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=150, verbose_name='Заголовок')
     content = models.TextField(blank=True)
-    time_create = models.DateTimeField(auto_now_add=True)
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     time_update = models.DateTimeField(auto_now=True)
+
     ispublished = models.BooleanField(
-        choices=Status.choices,
-        default=Status.DRAFT
+        choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
+        default=Status.DRAFT,
+        verbose_name='Статус'
     )
+
     slug = models.SlugField(
         max_length=255,
         db_index=True,
         unique=True
     )
-    categ = models.ForeignKey('Category', on_delete=models.PROTECT)
+
+    categ = models.ForeignKey(
+        'Category',
+        on_delete=models.PROTECT,
+        related_name='posts',
+        verbose_name='Категория'
+    )
+
     tags = models.ManyToManyField(
         'Tag',
         blank=True,
         related_name='tags'
     )
+
     husband = models.OneToOneField(
         'Husband',
         on_delete=models.SET_NULL,
@@ -48,6 +59,10 @@ class Woman(models.Model):
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
 
+    class Meta:
+        verbose_name = 'Известные женщины'
+        verbose_name_plural = 'Известные женщины'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
@@ -62,6 +77,10 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'categ_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Категории'
+        verbose_name_plural = 'Категории'
 
 
 class Tag(models.Model):
@@ -82,6 +101,7 @@ class Tag(models.Model):
 class Husband(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField(null=True)
+    marriage_count = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.name

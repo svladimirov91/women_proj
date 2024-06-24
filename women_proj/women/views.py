@@ -10,10 +10,9 @@ menu = [
     {'title': 'Войти', 'url_name': 'login'}
 ]
 
-women_db = Woman.published.all()
-
 
 def index(request):
+    women_db = Woman.published.all().select_related('categ')
     data = {
         'title': 'Главная страница',
         'menu': menu,
@@ -51,7 +50,7 @@ def show_post(request, post_slug):
 
 def show_by_category(request, categ_slug):
     category = get_object_or_404(Category, slug=categ_slug)
-    posts = Woman.objects.filter(categ_id=category.pk)
+    posts = Woman.objects.filter(categ_id=category.pk).select_related('categ')
     data = {
         'title': f'Рубрика: {category.name}',
         'menu': menu,
@@ -63,7 +62,7 @@ def show_by_category(request, categ_slug):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
-    posts = tag.tags.filter(ispublished=Woman.Status.PUBLISHED)
+    posts = tag.tags.filter(ispublished=Woman.Status.PUBLISHED).select_related('categ')
     data = {
         'title': f'Тег: {tag.tag}',
         'menu': menu,
