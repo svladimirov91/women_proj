@@ -12,4 +12,4 @@ def get_categories():
 
 @register.inclusion_tag('women/list_tags.html')
 def show_all_tags():
-    return {'tags': Tag.objects.annotate(total=Count('tags')).filter(total__gt=0)}
+    return {'tags': Tag.objects.annotate(total=Count('woman')).filter(total__gt=0)}

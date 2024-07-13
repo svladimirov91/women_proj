@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound
 
+from .forms import AddPostForm
 from .models import Woman, Category, Tag
 
 menu = [
@@ -25,8 +26,19 @@ def about(request):
     return render(request, 'women/about.html', {'title': 'О сайте', 'menu': menu})
 
 
-def add(request):
-    return HttpResponse('add')
+def add_post(request):
+    if request.method == 'POST':
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = AddPostForm()
+    data = {
+        'title': 'Добавление статьи',
+        'menu': menu,
+        'form': form
+    }
+    return render(request, 'women/add.html', context=data)
 
 
 def contacts(request):
@@ -62,7 +74,7 @@ def show_by_category(request, categ_slug):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
-    posts = tag.tags.filter(ispublished=Woman.Status.PUBLISHED).select_related('categ')
+    posts = tag.woman_set.filter(ispublished=Woman.Status.PUBLISHED).select_related('categ')
     data = {
         'title': f'Тег: {tag.tag}',
         'menu': menu,
