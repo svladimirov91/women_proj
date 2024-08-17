@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 
 from .forms import AddPostForm
@@ -28,10 +28,16 @@ def about(request):
 
 def add_post(request):
     if request.method == 'POST':
+        print('POST REQUEST')
         form = AddPostForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
+        # if form.is_valid():
+        #     try:
+        #         Woman.objects.create(**form.cleaned_data)
+        #         return redirect('home')
+        #     except Exception:
+        #         form.add_error(None, 'Ошибка добавления поста')
     else:
+        print('GET REQUEST')
         form = AddPostForm()
     data = {
         'title': 'Добавление статьи',
