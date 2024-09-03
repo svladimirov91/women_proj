@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'women',
+    'users',
     'debug_toolbar'
 ]
 
@@ -117,6 +118,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_URL = '/'
 
 
 # Static files (CSS, JavaScript, Images)

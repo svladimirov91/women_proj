@@ -18,4 +18,8 @@
 <h2>{{post.title}}</h2>
 {{post.content|linebreaks}}
 
+{% if post.photo and post.photo.file %}
+<p><img src="{{post.photo.url}}" alt="{{post.title}}"></p>
+{% endif %}
+
 {% endblock %}

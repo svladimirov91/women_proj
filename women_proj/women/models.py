@@ -5,10 +5,10 @@ from django.utils.text import slugify
 
 def translit_to_eng(s):
     d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
-         'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'к': 'k',
+         'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'i', 'к': 'k',
          'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
          'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
-         'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'r', 'ю': 'yu', 'я': 'ya'}
+         'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'a', 'ю': 'yu', 'я': 'ya'}
 
     res = map(lambda x: d[x] if d.get(x, False) else x, s.lower())
     return ''.join(res)
@@ -38,7 +38,9 @@ class Woman(models.Model):
     slug = models.SlugField(
         max_length=255,
         db_index=True,
-        unique=True
+        unique=True,
+        null=True,
+        blank=True
     )
 
     categ = models.ForeignKey(
@@ -65,6 +67,14 @@ class Woman(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
+    photo = models.ImageField(
+        upload_to='media',
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name='Фото'
+    )
+
     def __str__(self):
         return self.title
 
@@ -73,7 +83,10 @@ class Woman(models.Model):
 
     # автоматическая генерация слагов
     def save(self, *args, **kwargs):
-        self.slug = slugify(translit_to_eng(self.title))
+        print('save called')
+        if not self.slug:
+            title_str = str(self.title)
+            self.slug = slugify(translit_to_eng(title_str))
         super().save(*args, **kwargs)
 
     class Meta:
@@ -98,6 +111,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категории'
         verbose_name_plural = 'Категории'
+        ordering = ['id']
 
 
 class Tag(models.Model):

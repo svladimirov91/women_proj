@@ -1,32 +1,38 @@
 from django import forms
-from .models import Category, Husband
+from django.core.exceptions import ValidationError
 
+from .models import Category, Husband, Woman
 
-class AddPostForm(forms.Form):
-    title = forms.CharField(
-        max_length=255,
-        label='Заголовок'
-    )
-
-    slug = forms.SlugField(
-        max_length=255,
-        label='URL'
-    )
-
-    content = forms.CharField(
-        widget=forms.Textarea(),
-        required=False
-    )
-
-    ispublished = forms.BooleanField(required=False)
-
+class AddPostForm(forms.ModelForm):
     categ = forms.ModelChoiceField(
         queryset=Category.objects.all(),
-        empty_label='Не выбрана'
+        empty_label='Категория не выбрана',
+        label='Категория'
     )
 
     husband = forms.ModelChoiceField(
         queryset=Husband.objects.all(),
+        empty_label='Не замужем',
         required=False,
-        empty_label='Не замужем'
+        label='Муж'
     )
+
+    class Meta:
+        model = Woman
+        fields = [
+            'title',
+            'slug',
+            'content',
+            'ispublished',
+            'categ',
+            'husband',
+            'tags',
+            'photo'
+        ]
+
+    #  валидатор для заголовка
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if len(title) > 50:
+            raise ValidationError('Длина не должна превышать 50 символов')
+        return title

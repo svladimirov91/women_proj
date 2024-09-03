@@ -4,13 +4,16 @@
 {% block content %}
 {% include 'women/includes/nav.html' %}
 
-    <h1 style="font-size: 50px">{{title}}</h1>
+    <h1 style="font-size:50px">{{title}}</h1>
     <ul>
-        {% for post in posts %}
+        {% for post in object_list %}
         {% if post.ispublished %}
         <li>
             <h2>{{post.title}}</h2>
             <p>{{post.content|linebreaks|truncatewords:55}}</p><br>
+            {% if post.photo %}
+            <img style="max-width:150px" src="{{post.photo.url}}">
+            {% endif %}
             <div>
                 <p>Категория: <i>{{post.categ.name}}</i></p>
                 <p>Последнее обновление: <i>{{post.time_update}}</i></p>
