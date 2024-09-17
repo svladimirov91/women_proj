@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -75,6 +76,13 @@ class Woman(models.Model):
         verbose_name='Фото'
     )
 
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None
+    )
+
     def __str__(self):
         return self.title
 
@@ -136,4 +144,3 @@ class Husband(models.Model):
 
     def __str__(self):
         return self.name
-

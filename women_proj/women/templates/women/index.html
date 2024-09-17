@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% load women_tags %}
 
+{% block title %}{{title}}{% endblock %}
+
 {% block content %}
 {% include 'women/includes/nav.html' %}
 
     <h1 style="font-size:50px">{{title}}</h1>
     <ul>
-        {% for post in object_list %}
+        {% for post in posts %}
         {% if post.ispublished %}
         <li>
             <h2>{{post.title}}</h2>
@@ -15,7 +17,7 @@
             <img style="max-width:150px" src="{{post.photo.url}}">
             {% endif %}
             <div>
-                <p>Категория: <i>{{post.categ.name}}</i></p>
+                <p>Категория: <i>{{post.categ.name}}</i> | Автор: <i>{{post.author.username|default:"Неизвестен"}}</i></p>
                 <p>Последнее обновление: <i>{{post.time_update}}</i></p>
             </div>
             <a href="{{post.get_absolute_url}}"><button style="cursor:pointer">Читать статью</button></a>
@@ -31,3 +33,32 @@
 <br>
 {% endblock %}
 
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+<nav class="list-pages">
+    <ul>
+        {% if page_obj.has_previous %}
+        <li>
+            <a href="?page={{page_obj.previous_page_number}}">&lt;</a>
+        </li>
+        {% endif %}
+
+        {% for p in paginator.page_range %}
+        {% if page_obj.number == p %}
+        <li style="box-shadow: 3px 3px 7px #d0d0d0;">{{p}}</li>
+        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+        <li>
+            <a href="?page={{p}}">{{p}}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li>
+            <a href="?page={{page_obj.next_page_number}}">&gt;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

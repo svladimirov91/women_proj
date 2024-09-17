@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Авторизация</h1>
+<div style="padding-left:10px">
+    <h1>{{title}}</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><button type="submit">Войти</button></p>
-</form>
+    <form method="post">
+        {% csrf_token %}
+<!--        полезная штука для перенаправления на другую страницу. value={{next}}-->
+<!--        <input type="hidden" name="next" value="{% url 'add' %}"/>-->
+        {{ form.as_p }}
+        <p><button type="submit">Войти</button></p>
+    </form>
+</div>
+
 {% endblock %}

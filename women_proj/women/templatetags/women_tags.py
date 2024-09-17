@@ -1,9 +1,14 @@
 from django import template
 from women.models import Category, Tag
 from django.db.models import Count
-from women.utils import menu
+from women.utils import menu, post_buttons
 
 register = template.Library()
+
+
+@register.simple_tag()
+def get_edit_buttons():
+    return post_buttons
 
 
 @register.simple_tag()

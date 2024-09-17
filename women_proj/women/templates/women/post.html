@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
+{% load women_tags %}
 
 {% block breadcrumbs %}
-{% with post.tags.all as tags %}
+<div style="padding-left:10px">
+    {% with post.tags.all as tags %}
 {% if tags %}
 <p>Теги:</p>
 <ul class="tags-list">
@@ -11,15 +13,27 @@
 </ul>
 {% endif %}
 {% endwith %}
+</div>
 {% endblock %}
+
+{% block title %}{{post.title}}{% endblock %}
 
 {% block content %}
 
-<h2>{{post.title}}</h2>
-{{post.content|linebreaks}}
+{% get_edit_buttons as buttons %}
 
-{% if post.photo and post.photo.file %}
-<p><img src="{{post.photo.url}}" alt="{{post.title}}"></p>
-{% endif %}
+<div style="padding:10px">
+    <h1 style="font-size:40px">{{post.title}}</h1>
+    {% for b in buttons %}
+        <a style="font-size:14px" href="{% url b.url post.pk %}">{{b.name}}</a>
+        {% if not forloop.last %}|{% else %}{% endif %}
+    {% endfor %}
+
+    {{post.content|linebreaks}}
+
+    {% if post.photo and post.photo.file %}
+        <p><img src="{{post.photo.url}}" alt="{{post.title}}"></p>
+    {% endif %}
+</div>
 
 {% endblock %}
